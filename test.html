@@ -1,125 +1,261 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <script src="myvega.js"></script>
         <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="myvega.js"></script>
+        <style>
+            
+        </style>
     </head>
     <body>
+        <a href="dsada">1321321</a>
+        <a href="dsad">132131</a>
         <div id="view"></div>
+        <script>
+            let arrOfTag_a = document.getElementsByTagName('a');
+            for(let i = 0; i < arrOfTag_a.length; i++) {
+                arrOfTag_a[i].onmousedown = function(e){
+                    e.preventDefault();
+                    arrOfTag_a[i].style = `pointer-events: none;`;
+                    console.log(e)
+                }
+            }
+        </script>
         <script>
             // fetch('https://vega.github.io/vega/examples/bar-chart.vg.json')
             //     .then(res => res.json())
             //     .then(spec => render(spec))
             //     .catch(err => console.error(err));
             let options = {
-                "width": 400,
-                "height": 200,
-                "padding": 5,
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "A basic line chart example.",
+  "width": 500,
+  "height": 200,
+  "padding": 5,
 
-                "data": [
-                    {
-                    "name": "table",
-                    "values": [
-                        {"category": "A", "amount": 28},
-                        {"category": "B", "amount": 55},
-                        {"category": "C", "amount": 43},
-                        {"category": "D", "amount": 91},
-                        {"category": "E", "amount": 81},
-                        {"category": "F", "amount": 53},
-                        {"category": "G", "amount": 19},
-                        {"category": "H", "amount": 87}
-                    ]
-                    }
-                ],
+  "signals": [
+    {
+      "name": "interpolate",
+      "value": "linear",
+      "bind": {
+        "input": "select",
+        "options": [
+          "basis",
+          "cardinal",
+          "catmull-rom",
+          "linear",
+          "monotone",
+          "natural",
+          "step",
+          "step-after",
+          "step-before"
+        ]
+      }
+    }
+  ],
 
-                "signals": [
-                    {
-                    "name": "tooltip",
-                    "value": {},
-                    "on": [
-                        {"events": "rect:mouseover", "update": "datum"},
-                        {"events": "rect:mouseout",  "update": "{}"}
-                    ]
-                    }
-                ],
+  "data": [
+    {
+      "name": "table",
+      "values": [
+        {"x": 0, "y": 28, "c":0}, {"x": 0, "y": 20, "c":1},
+        {"x": 1, "y": 43, "c":0}, {"x": 1, "y": 35, "c":1},
+        {"x": 2, "y": 81, "c":0}, {"x": 2, "y": 10, "c":1},
+        {"x": 3, "y": 19, "c":0}, {"x": 3, "y": 15, "c":1},
+        {"x": 4, "y": 52, "c":0}, {"x": 4, "y": 48, "c":1},
+        {"x": 5, "y": 24, "c":0}, {"x": 5, "y": 28, "c":1},
+        {"x": 6, "y": 87, "c":0}, {"x": 6, "y": 66, "c":1},
+        {"x": 7, "y": 17, "c":0}, {"x": 7, "y": 27, "c":1},
+        {"x": 8, "y": 68, "c":0}, {"x": 8, "y": 16, "c":1},
+        {"x": 9, "y": 49, "c":0}, {"x": 9, "y": 25, "c":1}
+      ]
+    }
+  ],
 
-                "scales": [
-                    {
-                    "name": "xscale",
-                    "type": "band",
-                    "domain": {"data": "table", "field": "category"},
-                    "range": "width",
-                    "padding": 0.05,
-                    "round": true
-                    },
-                    {
-                    "name": "yscale",
-                    "domain": {"data": "table", "field": "amount"},
-                    "nice": true,
-                    "range": "height"
-                    }
-                ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "point",
+      "range": "width",
+      "domain": {"data": "table", "field": "x"}
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "range": "height",
+      "nice": true,
+      "zero": true,
+      "domain": {"data": "table", "field": "y"}
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "range": "category",
+      "domain": {"data": "table", "field": "c"}
+    }
+  ],
 
-                "axes": [
-                    { "orient": "bottom", "scale": "xscale" },
-                    { "orient": "left", "scale": "yscale" }
-                ],
+  "axes": [
+    {"orient": "bottom", "scale": "x"},
+    {"orient": "left", "scale": "y"}
+  ],
 
-                "marks": [
-                    {
-                    "type": "rect",
-                    "from": {"data":"table"},
-                    "encode": {
-                        "enter": {
-                        "x": {"scale": "xscale", "field": "category"},
-                        "width": {"scale": "xscale", "band": 1},
-                        "y": {"scale": "yscale", "field": "amount"},
-                        "y2": {"scale": "yscale", "value": 0}
-                        },
-                        "update": {
-                        "fill": {"value": "steelblue"}
-                        },
-                        "hover": {
-                        "fill": {"value": "red"}
-                        }
-                    }
-                    },
-                    {
-                    "type": "text",
-                    "encode": {
-                        "enter": {
-                        "align": {"value": "center"},
-                        "baseline": {"value": "bottom"},
-                        "fill": {"value": "#333"}
-                        },
-                        "update": {
-                        "x": {"scale": "xscale", "signal": "tooltip.category", "band": 0.5},
-                        "y": {"scale": "yscale", "signal": "tooltip.amount", "offset": -2},
-                        "text": {"signal": "tooltip.amount"},
-                        "fillOpacity": [
-                            {"test": "datum === tooltip", "value": 0},
-                            {"value": 1}
-                        ]
-                        }
-                    }
-                    }
-                ]
+  "marks": [
+    {
+      "type": "group",
+      "from": {
+        "facet": {
+          "name": "series",
+          "data": "table",
+          "groupby": "c"
+        }
+      },
+      "marks": [
+        {
+          "type": "line",
+          "from": {"data": "series"},
+          "encode": {
+            "enter": {
+              "x": {"scale": "x", "field": "x"},
+              "y": {"scale": "y", "field": "y"},
+              "stroke": {"scale": "color", "field": "c"},
+              "strokeWidth": {"value": 2}
+            },
+            "update": {
+              "interpolate": {"signal": "interpolate"},
+              "strokeOpacity": {"value": 1}
+            },
+            "hover": {
+              "strokeOpacity": {"value": 0.5}
             }
-            render(options);
+          }
+        }
+      ]
+    }
+  ]
+}
+
+render(options);
             function render(spec) {
                 var view = new vega.View(vega.parse(spec),{
                     renderer: 'canvas',
                     container: '#view',
                     hover: true
                 })
-                console.log(view)
                 return view.runAsync();
             }
-            // $.post("http:localhost:3000/bar",{
-            //     "option": JSON.stringify(options)
-            // },function(data){
-            //     console.log(JSON.parse(data))
-            // });
+//             var Ajax={
+//     get: function(url, fn) {
+//         // XMLHttpRequest对象用于在后台与服务器交换数据   
+//         var xhr = new XMLHttpRequest();            
+//         xhr.open('GET', url, true);
+//         xhr.onreadystatechange = function() {
+//         // readyState == 4说明请求已完成
+//         if (xhr.readyState == 4 && xhr.status == 200 || xhr.status == 304) { 
+//             // 从服务器获得数据 
+//             fn.call(this, xhr.responseText);  
+//         }
+//         };
+//         xhr.send();
+//     },
+//     post: function (url, data, fn) {
+//         var xhr = new XMLHttpRequest();
+//         xhr.open("POST", url, false);
+//         // 添加http头，发送信息至服务器时内容编码类型
+//         xhr.setRequestHeader("Content-Type", "text/plain");  
+//         xhr.onreadystatechange = function() {
+//         if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
+//             fn.call(this, xhr.responseText);
+//         }
+//         };
+//         xhr.send(data);
+//     }
+//   }
+//   var ed = new People('ed')
+// ed.wife.hasband = new People("ee");
+//   Ajax.post('http://localhost:3000',stringifyObject({scope:ed, spec: options}),function(data){
+//         console.log(parseObject(data))
+//         // return scope
+//     })
+            // function stringifyObject(obj) {
+            //     if(obj === null){
+            //         return;
+            //     }
+            //     let res = "{";
+            //     for(let item in obj){
+            //         if(obj.hasOwnProperty(item)){
+            //             if(obj[item] instanceof Function){
+            //                 res += `"${item}": ${obj[item]},`;
+            //             }else if(obj[item] instanceof Object){
+            //                 res += `"${item}": ${stringifyObject(obj[item])},`;
+            //             }
+            //             else if(typeof obj[item] === "string"){
+            //                 res += `"${item}": "${obj[item]}",`
+            //             }
+            //             else{
+            //                 res += `"${item}": ${obj[item]},`
+            //             }
+            //         }
+            //     }
+            //     let proto = obj.__proto__
+            //     if(proto != null){
+            //         if(proto.constructor.toString() != "function Object() { [native code] }" && 
+            //         proto.constructor.toString() != "function Array() { [native code] }"){
+            //             proto.constructor1 = proto.constructor;
+            //         }
+            //         res += `__proto__: ${stringifyObject(proto)}
+            //         }`;
+            //         return res;
+            //     }else{
+            //         res += `__proto__: ${stringifyObject(proto)}
+            //         }`;
+            //         return res;
+            //     }
+            // }
+            // function parseObject(obj){
+            //     let res = {};
+            //     let execStr = `let temp = ${obj}; res = temp`
+            //     eval(execStr);
+            //     recoverConstructor(res);
+            //     return res;
+            // }
+            // function recoverConstructor(obj){
+            //     for(let item in obj){
+            //         if(obj.hasOwnProperty(item)){
+            //             if(obj[item] instanceof Function){
+            //                 item = obj[item];
+            //             }else if(obj[item] instanceof Object){
+            //                 item = recoverConstructor(obj[item]);
+            //             }
+            //             else{
+            //                 item = obj[item];
+            //             }
+            //         }
+            //     }
+            //     if(obj.__proto__.constructor1 !== undefined){
+            //         obj.__proto__.constructor = obj.__proto__.constructor1;
+            //         delete obj.__proto__.constructor1;
+            //     }
+            //     return obj; 
+            // }
+            // People.prototype.look = function(){
+            //     console.log("看")
+            // }
+            // function People(name){
+            //     this.name = name;
+            //     this.eat = function(food){
+            //         console.log(`${this.name}吃了${food}`)
+            //     }
+            //     this.wife = {
+            //         name: "lory",
+            //         age: 20,
+            //         see: function(){
+            //             console.log("看到了好东西")
+            //         }
+            //     }
+            // }
+            
+            
         </script>
     </body>
 </html>

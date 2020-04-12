@@ -37055,13 +37055,13 @@
   prototype$1s.getState = getState$1;
   prototype$1s.setState = setState$1;
 
+  
   function parseAutosize(spec, config) {
     spec = spec || config.autosize;
     return isObject(spec)
       ? spec
       : {type: spec || 'pad'};
   }
-
   function parsePadding(spec, config) {
     spec = spec || config.padding;
     return isObject(spec)
@@ -40353,11 +40353,10 @@
   }
 
   var defined = toSet(['width', 'height', 'padding', 'autosize']);
-
+  
   function parseView(spec, scope) {
     var config = scope.config,
         op, input, encode, parent, root, signals;
-
     scope.background = spec.background || config.background;
     scope.eventConfig = config.events;
     root = ref(scope.root = scope.add(operator()));
@@ -40405,7 +40404,6 @@
 
     // 跟踪根项目的元数据
     scope.addData('root', new DataScope(scope, input, input, op));
-
     return scope;
   }
 
@@ -40495,6 +40493,14 @@
 
   prototype$1u.toRuntime = function() {
     this.finish();
+    let tmp = {
+      background:  this.background,
+      operators:   this.operators,
+      streams:     this.streams,
+      updates:     this.updates,
+      bindings:    this.bindings,
+      eventConfig: this.eventConfig
+    }
     return {
       background:  this.background,
       operators:   this.operators,
@@ -40571,7 +40577,6 @@
         annotate(ds.index[field], name, 'index:' + field);
       }
     }
-
     return this;
   };
 
@@ -41078,13 +41083,59 @@
       }
     };
   }
+  //用于Ajax请求
+  var Ajax={
+    get: function(url, fn) {
+        // XMLHttpRequest对象用于在后台与服务器交换数据   
+        var xhr = new XMLHttpRequest();            
+        xhr.open('GET', url, true);
+        xhr.onreadystatechange = function() {
+        // readyState == 4说明请求已完成
+        if (xhr.readyState == 4 && xhr.status == 200 || xhr.status == 304) { 
+            // 从服务器获得数据 
+            fn.call(this, xhr.responseText);  
+        }
+        };
+        xhr.send();
+    },
+    post: function (url, data, fn, err) {
+        var xhr = new XMLHttpRequest();
+        
+        xhr.open("POST", url, false);
+        
+        // 添加http头，发送信息至服务器时内容编码类型
+        xhr.setRequestHeader("Content-Type", "application/json");  
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
+              fn.call(this, xhr.responseText);
+          }
+        };
+        try{
+          xhr.send(data);
+        }catch(e){
+          err.call(this,e)
+        }
+    }
+  }
   //vega.parse的实体
   function parse$5(spec, config) {
     if (!isObject(spec)) {
       error('Input Vega specification must be an object.');
     }
     config = mergeConfig(defaults(), config, spec.config);
-    return parseView(spec, new Scope$1(config)).toRuntime();
+    let res = {}
+    //Ajax传递数据给后端计算
+    Ajax.post('http://localhost:3000',JSON.stringify({spec:spec,config:config}),function(data){
+      res = JSON.parse(data)
+      if(res.error){
+        throw Error(res.error)
+      }
+    }, function(e){
+      console.error(e);
+      console.log("连接后台失败，使用前端计算数据")
+      res = parseView(spec, new Scope$1(config)).toRuntime();
+    })
+    return res
   }
 
   // -- Transforms -----

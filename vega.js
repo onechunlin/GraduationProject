@@ -4696,6 +4696,7 @@
 
   function transform$1(type) {
     type = type && type.toLowerCase();
+    console.log(hasOwnProperty(transforms, type))
     return hasOwnProperty(transforms, type) ? transforms[type] : null;
   }
 
@@ -38933,9 +38934,10 @@
    * Parse a data transform specification.
    */
   function parseTransform(spec, scope) {
+    console.log(spec.type)
     var def = definition(spec.type);
     if (!def) error('Unrecognized transform type: ' + $(spec.type));
-
+    
     var t = entry(def.type.toLowerCase(), null, parseParameters$1(def, spec, scope));
     if (spec.signal) scope.addSignal(spec.signal, scope.proxy(t));
     t.metadata = def.metadata || {};
@@ -40490,6 +40492,7 @@
 
   prototype$1u.toRuntime = function() {
     this.finish();
+    console.log(this.eventConfig)
     return {
       background:  this.background,
       operators:   this.operators,
