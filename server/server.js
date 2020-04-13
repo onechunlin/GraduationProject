@@ -6,7 +6,7 @@ app.use(bodyParser.json());
 app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
-  res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Methods", "POST");
   res.header("X-Powered-By", ' 3.2.1')
   res.header("Content-Type", "application/json;charset=utf-8");
   next();
@@ -24127,8 +24127,6 @@ function ascendingComparator$1(f) {
   };
 }
 
-var ascendingBisect$1 = bisector$1(ascending$1);
-
 function range$1(start, stop, step) {
   start = +start, stop = +stop, step = (n = arguments.length) < 2 ? (stop = start, start = 0, 1) : n < 3 ? 1 : +step;
 
@@ -32518,7 +32516,6 @@ var xf = /*#__PURE__*/Object.freeze({
   resolvefilter: ResolveFilter
 });
 
-var version = "5.9.1";
 
 var Default = 'default';
 
