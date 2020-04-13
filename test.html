@@ -1,252 +1,128 @@
 <html>
-    <head>
-        <meta charset="utf-8">
-        <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
-        <script src="myvega.js"></script>
-        <style>
-            
-        </style>
-    </head>
-    <body>
-        <div id="view"></div>
-        <script>
-            let arrOfTag_a = document.getElementsByTagName('a');
-            for(let i = 0; i < arrOfTag_a.length; i++) {
-                arrOfTag_a[i].onmousedown = function(e){
-                    e.preventDefault();
-                    arrOfTag_a[i].style = `pointer-events: none;`;
-                    console.log(e)
-                }
+  <head>
+      <meta charset="utf-8">
+      <script src="myvega.js"></script>
+  </head>
+  <body>
+    <div id="view"></div>
+    <script>
+        // fetch('https://vega.github.io/vega/examples/bar-chart.vg.json')
+        //     .then(res => res.json())
+        //     .then(spec => render(spec))
+        //     .catch(err => console.error(err));
+        let vegaJson = {
+          "$schema": "https://vega.github.io/schema/vega/v5.json",
+          "description": "A basic scatter plot example depicting automobile statistics.",
+          "width": 200,
+          "height": 200,
+          "padding": 5,
+
+          "data": [
+          {
+            "name": "source",
+            "url": "https://vega.github.io/editor/data/cars.json",
+            "transform": [
+              {
+                "type": "filter",
+                "expr": "datum['Horsepower'] != null && datum['Miles_per_Gallon'] != null && datum['Acceleration'] != null"
+              }
+            ]
+          }
+          ],
+
+          "scales": [
+          {
+            "name": "x",
+            "type": "linear",
+            "round": true,
+            "nice": true,
+            "zero": true,
+            "domain": {"data": "source", "field": "Horsepower"},
+            "range": "width"
+          },
+          {
+            "name": "y",
+            "type": "linear",
+            "round": true,
+            "nice": true,
+            "zero": true,
+            "domain": {"data": "source", "field": "Miles_per_Gallon"},
+            "range": "height"
+          },
+          {
+            "name": "size",
+            "type": "linear",
+            "round": true,
+            "nice": false,
+            "zero": true,
+            "domain": {"data": "source", "field": "Acceleration"},
+            "range": [4,361]
+          }
+          ],
+
+          "axes": [
+          {
+            "scale": "x",
+            "grid": true,
+            "domain": false,
+            "orient": "bottom",
+            "tickCount": 5,
+            "title": "Horsepower"
+          },
+          {
+            "scale": "y",
+            "grid": true,
+            "domain": false,
+            "orient": "left",
+            "titlePadding": 5,
+            "title": "Miles_per_Gallon"
+          }
+          ],
+
+          "legends": [
+          {
+            "size": "size",
+            "title": "Acceleration",
+            "format": "s",
+            "symbolStrokeColor": "#4682b4",
+            "symbolStrokeWidth": 2,
+            "symbolOpacity": 0.5,
+            "symbolType": "circle"
+          }
+          ],
+
+          "marks": [
+          {
+            "name": "marks",
+            "type": "symbol",
+            "from": {"data": "source"},
+            "encode": {
+              "update": {
+                "x": {"scale": "x", "field": "Horsepower"},
+                "y": {"scale": "y", "field": "Miles_per_Gallon"},
+                "size": {"scale": "size", "field": "Acceleration"},
+                "shape": {"value": "circle"},
+                "strokeWidth": {"value": 2},
+                "opacity": {"value": 0.5},
+                "stroke": {"value": "#4682b4"},
+                "fill": {"value": "transparent"}
+              }
             }
-        </script>
-        <script>
-            // fetch('https://vega.github.io/vega/examples/bar-chart.vg.json')
-            //     .then(res => res.json())
-            //     .then(spec => render(spec))
-            //     .catch(err => console.error(err));
-            let options = {
-  "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "A basic scatter plot example depicting automobile statistics.",
-  "width": 200,
-  "height": 200,
-  "padding": 5,
+          }
+          ]
 
-  "data": [
-    {
-      "name": "source",
-      "url": "https://vega.github.io/editor/data/cars.json",
-      "transform": [
-        {
-          "type": "filter",
-          "expr": "datum['Horsepower'] != null && datum['Miles_per_Gallon'] != null && datum['Acceleration'] != null"
         }
-      ]
-    }
-  ],
 
-  "scales": [
-    {
-      "name": "x",
-      "type": "linear",
-      "round": true,
-      "nice": true,
-      "zero": true,
-      "domain": {"data": "source", "field": "Horsepower"},
-      "range": "width"
-    },
-    {
-      "name": "y",
-      "type": "linear",
-      "round": true,
-      "nice": true,
-      "zero": true,
-      "domain": {"data": "source", "field": "Miles_per_Gallon"},
-      "range": "height"
-    },
-    {
-      "name": "size",
-      "type": "linear",
-      "round": true,
-      "nice": false,
-      "zero": true,
-      "domain": {"data": "source", "field": "Acceleration"},
-      "range": [4,361]
-    }
-  ],
-
-  "axes": [
-    {
-      "scale": "x",
-      "grid": true,
-      "domain": false,
-      "orient": "bottom",
-      "tickCount": 5,
-      "title": "Horsepower"
-    },
-    {
-      "scale": "y",
-      "grid": true,
-      "domain": false,
-      "orient": "left",
-      "titlePadding": 5,
-      "title": "Miles_per_Gallon"
-    }
-  ],
-
-  "legends": [
-    {
-      "size": "size",
-      "title": "Acceleration",
-      "format": "s",
-      "symbolStrokeColor": "#4682b4",
-      "symbolStrokeWidth": 2,
-      "symbolOpacity": 0.5,
-      "symbolType": "circle"
-    }
-  ],
-
-  "marks": [
-    {
-      "name": "marks",
-      "type": "symbol",
-      "from": {"data": "source"},
-      "encode": {
-        "update": {
-          "x": {"scale": "x", "field": "Horsepower"},
-          "y": {"scale": "y", "field": "Miles_per_Gallon"},
-          "size": {"scale": "size", "field": "Acceleration"},
-          "shape": {"value": "circle"},
-          "strokeWidth": {"value": 2},
-          "opacity": {"value": 0.5},
-          "stroke": {"value": "#4682b4"},
-          "fill": {"value": "transparent"}
+        render(vegaJson);
+        function render(spec) {
+            var view = new vega.View(vega.parse(spec),{
+                renderer: 'canvas',
+                container: '#view',
+                hover: true
+            })
+            return view.runAsync();
         }
-      }
-    }
-  ]
-}
 
-render(options);
-            function render(spec) {
-                var view = new vega.View(vega.parse(spec),{
-                    renderer: 'canvas',
-                    container: '#view',
-                    hover: true
-                })
-                return view.runAsync();
-            }
-//             var Ajax={
-//     get: function(url, fn) {
-//         // XMLHttpRequest对象用于在后台与服务器交换数据   
-//         var xhr = new XMLHttpRequest();            
-//         xhr.open('GET', url, true);
-//         xhr.onreadystatechange = function() {
-//         // readyState == 4说明请求已完成
-//         if (xhr.readyState == 4 && xhr.status == 200 || xhr.status == 304) { 
-//             // 从服务器获得数据 
-//             fn.call(this, xhr.responseText);  
-//         }
-//         };
-//         xhr.send();
-//     },
-//     post: function (url, data, fn) {
-//         var xhr = new XMLHttpRequest();
-//         xhr.open("POST", url, false);
-//         // 添加http头，发送信息至服务器时内容编码类型
-//         xhr.setRequestHeader("Content-Type", "text/plain");  
-//         xhr.onreadystatechange = function() {
-//         if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
-//             fn.call(this, xhr.responseText);
-//         }
-//         };
-//         xhr.send(data);
-//     }
-//   }
-//   var ed = new People('ed')
-// ed.wife.hasband = new People("ee");
-//   Ajax.post('http://localhost:3000',stringifyObject({scope:ed, spec: options}),function(data){
-//         console.log(parseObject(data))
-//         // return scope
-//     })
-            // function stringifyObject(obj) {
-            //     if(obj === null){
-            //         return;
-            //     }
-            //     let res = "{";
-            //     for(let item in obj){
-            //         if(obj.hasOwnProperty(item)){
-            //             if(obj[item] instanceof Function){
-            //                 res += `"${item}": ${obj[item]},`;
-            //             }else if(obj[item] instanceof Object){
-            //                 res += `"${item}": ${stringifyObject(obj[item])},`;
-            //             }
-            //             else if(typeof obj[item] === "string"){
-            //                 res += `"${item}": "${obj[item]}",`
-            //             }
-            //             else{
-            //                 res += `"${item}": ${obj[item]},`
-            //             }
-            //         }
-            //     }
-            //     let proto = obj.__proto__
-            //     if(proto != null){
-            //         if(proto.constructor.toString() != "function Object() { [native code] }" && 
-            //         proto.constructor.toString() != "function Array() { [native code] }"){
-            //             proto.constructor1 = proto.constructor;
-            //         }
-            //         res += `__proto__: ${stringifyObject(proto)}
-            //         }`;
-            //         return res;
-            //     }else{
-            //         res += `__proto__: ${stringifyObject(proto)}
-            //         }`;
-            //         return res;
-            //     }
-            // }
-            // function parseObject(obj){
-            //     let res = {};
-            //     let execStr = `let temp = ${obj}; res = temp`
-            //     eval(execStr);
-            //     recoverConstructor(res);
-            //     return res;
-            // }
-            // function recoverConstructor(obj){
-            //     for(let item in obj){
-            //         if(obj.hasOwnProperty(item)){
-            //             if(obj[item] instanceof Function){
-            //                 item = obj[item];
-            //             }else if(obj[item] instanceof Object){
-            //                 item = recoverConstructor(obj[item]);
-            //             }
-            //             else{
-            //                 item = obj[item];
-            //             }
-            //         }
-            //     }
-            //     if(obj.__proto__.constructor1 !== undefined){
-            //         obj.__proto__.constructor = obj.__proto__.constructor1;
-            //         delete obj.__proto__.constructor1;
-            //     }
-            //     return obj; 
-            // }
-            // People.prototype.look = function(){
-            //     console.log("看")
-            // }
-            // function People(name){
-            //     this.name = name;
-            //     this.eat = function(food){
-            //         console.log(`${this.name}吃了${food}`)
-            //     }
-            //     this.wife = {
-            //         name: "lory",
-            //         age: 20,
-            //         see: function(){
-            //             console.log("看到了好东西")
-            //         }
-            //     }
-            // }
-            
-            
-        </script>
-    </body>
+    </script>
+  </body>
 </html>
