@@ -1,3 +1,4 @@
 *.txt
+*.docx
+*.doc
 /server/node_modules
-/doc/毕业论文规范.doc
